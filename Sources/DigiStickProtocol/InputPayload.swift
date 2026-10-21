@@ -14,7 +14,6 @@ import Foundation
 /// Every field is encoded explicitly, byte by byte. The wire format never
 /// depends on Swift's in-memory struct layout or the host's endianness.
 public struct InputPayload: Equatable, Sendable {
-
     /// Wire protocol version written to, and required from, every packet.
     public static let protocolVersion: UInt8 = 1
 
@@ -49,9 +48,9 @@ public struct InputPayload: Equatable, Sendable {
             throw DecodingError.unsupportedVersion(bytes[0])
         }
 
-        self.x = Int16(bitPattern: UInt16(bytes[1]) | (UInt16(bytes[2]) << 8))
-        self.y = Int16(bitPattern: UInt16(bytes[3]) | (UInt16(bytes[4]) << 8))
-        self.buttons = bytes[5]
+        x = Int16(bitPattern: UInt16(bytes[1]) | (UInt16(bytes[2]) << 8))
+        y = Int16(bitPattern: UInt16(bytes[3]) | (UInt16(bytes[4]) << 8))
+        buttons = bytes[5]
     }
 
     /// The encoded wire representation of this payload.
@@ -64,7 +63,7 @@ public struct InputPayload: Equatable, Sendable {
             UInt8(truncatingIfNeeded: xBits >> 8),
             UInt8(truncatingIfNeeded: yBits),
             UInt8(truncatingIfNeeded: yBits >> 8),
-            buttons
+            buttons,
         ])
     }
 }

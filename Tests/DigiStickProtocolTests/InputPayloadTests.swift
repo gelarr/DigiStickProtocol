@@ -1,8 +1,7 @@
-import XCTest
 @testable import DigiStickProtocol
+import XCTest
 
 final class InputPayloadTests: XCTestCase {
-
     private struct Vector {
         let name: String
         let payload: InputPayload
@@ -17,19 +16,19 @@ final class InputPayloadTests: XCTestCase {
         ),
         Vector(
             name: "small positive x, negative y, two buttons",
-            payload: InputPayload(x: 1, y: -1, buttons: 0b0000_0011),
-            bytes: [0x01, 0x01, 0x00, 0xFF, 0xFF, 0x03]
+            payload: InputPayload(x: 1, y: -1, buttons: 0b00000011),
+            bytes: [0x01, 0x01, 0x00, 0xff, 0xff, 0x03]
         ),
         Vector(
             name: "extremes: x max, y min, all buttons",
-            payload: InputPayload(x: Int16.max, y: Int16.min, buttons: 0xFF),
-            bytes: [0x01, 0xFF, 0x7F, 0x00, 0x80, 0xFF]
+            payload: InputPayload(x: Int16.max, y: Int16.min, buttons: 0xff),
+            bytes: [0x01, 0xff, 0x7f, 0x00, 0x80, 0xff]
         ),
         Vector(
             name: "endianness: low byte first",
-            payload: InputPayload(x: 0x1234, y: 0x5678, buttons: 0x9A),
-            bytes: [0x01, 0x34, 0x12, 0x78, 0x56, 0x9A]
-        )
+            payload: InputPayload(x: 0x1234, y: 0x5678, buttons: 0x9a),
+            bytes: [0x01, 0x34, 0x12, 0x78, 0x56, 0x9a]
+        ),
     ]
 
     func testEncodingMatchesKnownVectors() {
@@ -77,7 +76,7 @@ final class InputPayloadTests: XCTestCase {
     }
 
     func testRejectsUnsupportedVersion() {
-        for version: UInt8 in [0x00, 0x02, 0xFF] {
+        for version: UInt8 in [0x00, 0x02, 0xff] {
             let data = Data([version, 0, 0, 0, 0, 0])
             XCTAssertThrowsError(try InputPayload(data: data), "version \(version)") { error in
                 XCTAssertEqual(
@@ -91,11 +90,11 @@ final class InputPayloadTests: XCTestCase {
     // MARK: - Data slices
 
     func testDecodesFromDataSliceWithNonZeroStartIndex() throws {
-        let packet: [UInt8] = [0xAA, 0xBB, 0x01, 0x34, 0x12, 0x78, 0x56, 0x9A]
+        let packet: [UInt8] = [0xaa, 0xbb, 0x01, 0x34, 0x12, 0x78, 0x56, 0x9a]
         let slice = Data(packet)[2...]
         XCTAssertNotEqual(slice.startIndex, 0)
 
         let decoded = try InputPayload(data: slice)
-        XCTAssertEqual(decoded, InputPayload(x: 0x1234, y: 0x5678, buttons: 0x9A))
+        XCTAssertEqual(decoded, InputPayload(x: 0x1234, y: 0x5678, buttons: 0x9a))
     }
 }

@@ -7,7 +7,7 @@ let package = Package(
     name: "DigiStickProtocol",
     platforms: [
         .macOS(.v14),
-        .iOS(.v17)
+        .iOS(.v17),
     ],
     products: [
         .library(
@@ -22,7 +22,7 @@ let package = Package(
         .testTarget(
             name: "DigiStickProtocolTests",
             dependencies: ["DigiStickProtocol"]
-        )
+        ),
 
     ],
     swiftLanguageModes: [.v6]
